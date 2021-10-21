@@ -1,0 +1,44 @@
+/*
+ * Buzzer.c
+ *
+ *  Created on: Sep 29, 2021
+ *      Author: Abdelrhman Badr
+ */
+#include "Std_DataType.h"
+#include "Math.h"
+#include "Atmega32A.h"
+#include "Error.h"
+#include "DIO.h"
+#include "Buzzer.h"
+#include "Timers.h"
+
+Error_t Buzzer_Setup(Buzzer_t *MyBuzzer)
+{
+	Error_t ReturnedError = NoError;
+	/*Set buzzer pin as output pin*/
+	ReturnedError =  DIO_SetPinDirection(MyBuzzer->BuzzerPort , MyBuzzer->BuzzerPin ,DIO_OUTPUT_PORT);
+	/*Initiare timer in case of using tone lever*/
+	Timer2_Initiate();
+	return ReturnedError;
+}
+Error_t Buzzer_TurnOn(Buzzer_t *MyBuzzer)
+{
+	Error_t ReturnedError = NoError;
+	/*Drive buzzer pin with high signal*/
+	ReturnedError = DIO_WritePin(MyBuzzer->BuzzerPort, MyBuzzer->BuzzerPin, DIO_HIGH_PIN);
+	return ReturnedError;
+}
+Error_t Buzzer_TurnOff(Buzzer_t *MyBuzzer)
+{
+	Error_t ReturnedError = NoError;
+	/*Drive buzzer pin with low signal*/
+	ReturnedError = DIO_WritePin(MyBuzzer->BuzzerPort, MyBuzzer->BuzzerPin, DIO_LOW_PIN);
+	return ReturnedError;
+}
+
+Error_t Buzzer_SetToneLevel(Buzzer_t *MyBuzzer , uint8 Level)
+{
+	Error_t ReturnedError = NoError;
+	Timer2_PWM_OC2Pin(Level);
+	return ReturnedError;
+}
